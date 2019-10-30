@@ -1,0 +1,84 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+  background-size: cover;
+  position: relative;
+}
+
+header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 35px;
+  font-size: 28px;
+  width: 96%;
+  z-index: 9999;
+  position: absolute;
+}
+
+.header-left, .header-right {
+  width: 50%;
+}
+
+.header-left {
+  display: flex;
+}
+
+.user span,
+.grade span {
+  margin-left: 8px;
+}
+
+.grade {
+  margin-left: 32px;
+}
+
+.header-right {
+  text-align: right;
+}
+
+section {
+  width: 100%;
+}
+
+footer {
+  position: relative;
+  bottom: -150px;
+}
+
+.person {
+  position: absolute;
+  top: 8px;
+  left: 5px;
+  width: 27px;
+  height: 33px;
+  background: url('../img/person/fd0dbfb20fef48bcb207df4a0e608215.png') no-repeat;
+  background-position: 0 0;
+  z-index: 1;
+}
+
+.map {
+  display: flex;
+  flex-wrap: wrap;
+  z-index: -1;
+  position: relative;
+}
+
+.map span {
+  width: 70px;
+  height: 70px;
+  background: url('../img/map/land.png') no-repeat;
+  background-size: cover;
+  transform: scale(1);
+  /*transition: 1s;*/
+  position: absolute;
+}
+
+

@@ -1,0 +1,122 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #fff;
+  background: #000;
+  min-height: 100vh;
+  position: relative;
+}
+
+.end {
+  position: absolute;
+  top: -80%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  animation: down 3s;
+  animation-fill-mode: forwards;
+}
+
+.alert {
+  width: 888px;
+  height: 496px;
+  background: url("../img/875ab2cf96a74f188ea6cacfda25a3c3.png") no-repeat;
+  background-size: contain;
+}
+
+.title {
+  text-align: center;
+  margin: 0;
+  font-weight: bold;
+  font-size: 4em;
+}
+
+.alert-content {
+  font-size: 30px;
+  padding: 32px 85px 35px;
+}
+
+.alert-content p {
+  margin: 8px 0;
+}
+
+.branch div,
+.fraction {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.branch div span,
+.table .fraction span {
+  width: 30px;
+  height: 30px;
+  display: block;
+  background: url('../img/bdf4522850a24778b754699e2de3f388.png');
+  background-size: cover;
+}
+
+.trophy {
+  width: 35px !important;
+  height: 35px !important;
+  background: url('../img/a4caded996404633b4f3fbd775372a90.png') no-repeat !important;
+  background-size: cover;
+}
+
+.ranking,
+.branch {
+  margin-top: 8px;
+}
+
+.ranking div {
+  font-size: 2.5em;
+  color: #ffba00;
+  text-shadow: 0 0 3px #000;
+}
+
+.RankingList {
+  display: none;
+}
+
+.table {
+  font-size: 25px;
+  margin-top: 32px;
+}
+
+.operation {
+  margin-top: 16px;
+}
+
+.operation a,
+button {
+  color: #fff;
+  outline: none;
+  text-decoration: none;
+  border: 1px solid #8d8a8a;
+  padding: 8px 25px;
+  background: url("../img/1fbaafffc3124d51a4efaaba80b6a9fe.png");
+  border-radius: 10px;
+  font-size: 23px;
+}
+
+.operation a:hover,
+button {
+  color: #000000;
+}
+caption{
+  caption-side: top !important;
+}
+
+@keyframes down {
+  from {
+    top: -80%;
+  }
+  to {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

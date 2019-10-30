@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>运动场</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.10.2/css/all.css">
+  <link rel="stylesheet" href="./css/PlayingFeld.css">
+</head>
+<body>
+<section>
+  <header>
+    <div class="header-left">
+      <div class="user"><i class="fas "></i> <span class="name">Admin</span></div>
+      <div class="grade"><img src="./img/crystal/crystal2.png" alt="" width="40"><span>0</span></div>
+    </div>
+    <div class="header-right">0m:0s</div>
+  </header>
+  <div class="person"></div>
+  <div class="map"></div>
+</section>
+<script src="./js/vendor/jquery-3.4.1.min.js"></script>
+<script>
+    $(function () {
+        if (sessionStorage.getItem('name')) {
+            $('.name').text(sessionStorage.getItem('name'));
+        } else {
+            location.href = "./index.html";
+        }
+        Game = {
+            person: $('.person'),
+            mapRow: parseInt($(document).width() / 50),// 行的数量
+            mapColumn: parseInt($(document).height() / 50) + 1, //列的数量
+            numberStone: 50, // 石头数量
+            numberCrystal: 5, // 水晶数量
+            crystalFraction: 0, // 分数
+            collisionTime: 10, //碰撞检测时间 单位毫秒
+            times: 0,//记录玩家开始了多少时间
+            flag: false,
+            map: function () {
+                let row = 0, column = 0;
+                for (let i = 0; i < (this.mapRow * this.mapColumn); i++) {
+                    if (row == this.mapRow) {
+                        row = 0;
+                        column++;
+                    }
+                    $('.map').append(`<span data-type="1"></span>`);
+                    $($('.map span')[i]).css({
+                        top: column * 50 + 'px',
+                        left: row * 50 + 'px',
+                        width: 50 + 'px',
+                        height: 50 + 'px',
+                    });
+                    row++;
+                }
+            }, //生成地图
+            time: function () {
+                let second = 0;
+                let branch = 0;
+                let that = this;
+                setInterval(function () {
+                    that.times++;
+                    second++;
+                    if (second == 60) {
+                        branch++;
+                        second = 0
+                    }
+                    $('.header-right').text(branch + 'm:' + second + 's');
+                }, 1000)
+            }, //记录时间
+            stone: function () {
+                let stone = new Array();
+                for (let i = 0; i < this.numberStone; i++) {
+                    stone[i] = Math.floor(Math.random() * (this.mapRow * this.mapColumn) + 1);
+                }
+                stone.forEach(function (i, e) {
+                    $($('.map span')[i]).css({
+                        'background': '#fff url("./img/map/stone.png") no-repeat',
+                        'z-index': '10',
+                    });
+                    $($('.map span')[i]).data('type', '2');
+                });
+            }, //生成石头
+            crystal: function () {
+                let crystal = new Array();
+                for (let i = 0; i < this.numberCrystal; i++) {
+                    crystal[i] = Math.floor(Math.random() * (this.mapRow * this.mapColumn) + 1);
+                }
+                crystal.forEach(function (i, e) {
+                    $($('.map span')[i]).css('background', '#ff6b81 url("./img/map/crystal.png") no-repeat');
+                    $($('.map span')[i]).data('type', '3');
+                });
+            }, //生成水晶
+            keydown: function () {
+                let that = this;
+                $(document).on('keydown', function (e) {
+                    switch (e.keyCode) {
+                        case 65: // a
+                            if (Number(that.person.css('left').replace('px', '')) <= '18') {
+                                return;
+                            }
+                            that.person.css({
+                                'left': '-=50',
+                                'background-position-y': '-32px',
+                            });
+                            that.flag = true;
+                            break;
+                        case 68: //d
+                            if (Number(that.person.css('left').replace('px', '')) >= screen.availWidth - 50) {
+                            } else {
+                                that.person.css({
+                                    'left': '+=50',
+                                    'background-position-y': '-64px',
+                                });
+                                that.flag = true;
+                            }
+                            break;
+                        case 87://w
+                            if (Number(that.person.css('top').replace('px', '')) <= '18') {
+                            } else {
+                                that.person.css({
+                                    'top': '-=50',
+                                    'background-position-y': '-95px',
+                                });
+                                that.flag = true;
+                            }
+                            break;
+                        case 83://s
+                            if (Number(that.person.css('top').replace('px', '')) >= 860) {
+                            } else {
+                                that.person.css({
+                                    'top': '+=50',
+                                    'background-position-y': 0,
+                                });
+                                that.flag = true;
+                            }
+                            break;
+                    }
+                });
+            }, // 键盘监听
+            collision: function () {
+                let that = this;
+                let time = setInterval(function () {
+                    $('.map span').each(function (i, e) {
+                        if ($(e).data('type') == 1) {
+                            if (that.person.offset().left < $(e).offset().left + $(e).width() &&
+                                that.person.offset().left + that.person.width() > $(e).offset().left &&
+                                that.person.offset().top < $(e).offset().top + $(e).height() &&
+                                that.person.offset().top + that.person.height() > $(e).offset().top) {
+                                if (that.flag) {
+                                    $(e).css('background', 'url()');
+                                    $(e).css('transform', 'scale(0)');
+                                }
+                            }
+                        } // 监听玩家经过的陆地
+                        if ($(e).data('type') == 2 || $(e).data('type') == 4) {
+                            if (that.person.offset().left < $(e).offset().left + $(e).width() &&
+                                that.person.offset().left + that.person.width() > $(e).offset().left &&
+                                that.person.offset().top < $(e).offset().top + $(e).height() &&
+                                that.person.offset().top + that.person.height() > $(e).offset().top) {
+                                alert("你已经死了");
+                                location.reload();
+                            }
+                        } // 监听玩家是否碰撞石头
+                        if ($(e).data('type') == 3) {
+                            if (that.person.offset().left < $(e).offset().left + $(e).width() &&
+                                that.person.offset().left + that.person.width() > $(e).offset().left &&
+                                that.person.offset().top < $(e).offset().top + $(e).height() &&
+                                that.person.offset().top + that.person.height() > $(e).offset().top) {
+                                that.crystalFraction++;
+                                if (that.crystalFraction == that.numberCrystal) {
+                                    let a = "name=" + sessionStorage.getItem('name') + "&crystal=" + $('.grade span').text() + "&date=" + that.times;
+                                    sessionStorage.setItem('score',a);
+                                    $('section').remove();
+                                    $.ajax({
+                                        url: './results.php',
+                                        type: 'POST',
+                                        data: a,
+                                        success: function(msg) {
+                                            if(msg == 200){
+                                                location.href = "End.php";
+                                            }
+                                        },
+                                        error: function (e) {
+                                            console.log(e);
+                                        }
+                                    })
+                                } else {
+                                    $('.grade span').text(that.crystalFraction);
+                                    $($('.map span')[i]).data('type', '0');
+                                    $($('.map span')[i]).css('background', 'url("") no-repeat');
+                                }
+                            }
+                        } // 监听玩家是否碰撞水晶
+                        if ($(e).data('type') == 2) {
+                            stop();
+                            if (that.person.offset().left < $(e).offset().left + $(e).width() &&
+                                that.person.offset().left + that.person.width() > $(e).offset().left &&
+                                that.person.offset().top < $(e).offset().top + $(e).height() + 250 &&
+                                that.person.offset().top + that.person.height() > $(e).offset().top) {
+                                $(e).data('type', '4');
+                                $(e).animate({top: $(document).height()}, 3000);
+                            }
+                        }
+                    });
+                }, this.collisionTime)
+            }, //碰撞检测
+            start: function () {
+                if($(document).width()>800) {
+                    this.map();
+                    this.time();
+                    this.stone();
+                    this.crystal();
+                    this.keydown();
+                    this.collision();
+                }
+            } // 启动所有
+        };
+        Game.start();
+
+    });
+</script>
+</body>
+</html>
